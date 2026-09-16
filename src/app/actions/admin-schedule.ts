@@ -37,20 +37,25 @@ export async function getAdminSchedule() {
 export async function getAdminScheduleFull() {
   const supabase = createAdminClient();
 
-  // It's easier to fetch from allocations and group by match_id
+  // Fetch from allocations and group by court_number
+  // Use FK hints (cases!case_id, teams!team_id) to disambiguate Supabase joins
   const { data: allocations, error } = await supabase
     .from("allocations")
     .select(`
       match_id,
       side,
       court_number,
-      teams ( college_name ),
-      cases ( case_number, title )
+      teams!team_id ( college_name ),
+      cases!case_id ( case_number, title )
     `)
     .neq("side", "BYE")
     .order("court_number", { ascending: true });
 
-  if (error || !allocations) return [];
+  if (error) {
+    console.error("[getAdminScheduleFull] Supabase error:", error);
+    return [];
+  }
+  if (!allocations) return [];
 
   // Group by court_number instead of match_id since auto-allocation doesn't create match records
   const scheduleMap = new Map();
