@@ -45,8 +45,8 @@ export async function getAdminScheduleFull() {
       match_id,
       side,
       court_number,
-      teams!team_id ( college_name ),
-      cases!case_id ( case_number, title )
+      teams ( college_name ),
+      cases ( case_number, title )
     `)
     .neq("side", "BYE")
     .order("court_number", { ascending: true });
