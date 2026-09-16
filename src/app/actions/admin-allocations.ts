@@ -1,6 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase";
+import { revalidatePath } from "next/cache";
 
 function shuffleArray<T>(array: T[]): T[] {
   const arr = [...array];
@@ -91,6 +92,10 @@ export async function autoAllocateTeams() {
   await supabase.from("event_settings").update({ allocations_locked: true }).eq("id", 1);
 
   const uniqueCourts = new Set(newAllocations.map(a => a.court_number)).size;
+
+  revalidatePath("/registry/schedule");
+  revalidatePath("/registry");
+  revalidatePath("/schedule");
 
   return { 
     success: true, 
