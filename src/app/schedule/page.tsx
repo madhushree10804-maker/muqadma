@@ -1,106 +1,87 @@
-"use client";
+import { getAdminScheduleFull } from "@/app/actions/admin-schedule";
+import { Gavel, Shield } from "lucide-react";
+import DownloadScheduleButton from "@/components/DownloadScheduleButton";
 
-import { useState, useEffect } from "react";
-import { getPublicSchedule } from "@/app/actions/schedule";
+export const dynamic = 'force-dynamic';
 
-export default function Schedule() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<{locked: boolean, courts: any[]}>({ locked: false, courts: [] });
-
-  useEffect(() => {
-    getPublicSchedule().then(res => {
-      setData(res);
-      setLoading(false);
-    });
-  }, []);
-
-  if (loading) {
-    return (
-      <main className="min-h-screen pt-32 px-6 flex items-center justify-center">
-         <div className="w-16 h-16 border-t-2 border-r-2 border-gold-accent rounded-full animate-spin" />
-      </main>
-    );
-  }
+export default async function ScheduleRegistry() {
+  const schedule = await getAdminScheduleFull();
 
   return (
-    <main className="min-h-screen pt-32 pb-16 px-6 max-w-5xl mx-auto">
-      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-        <h1 className="text-4xl md:text-5xl font-cinzel text-gold-accent text-center">
-          Court Schedule
-        </h1>
-        <div className="w-16 h-px bg-gold-muted mx-auto" />
-
-        {!data.locked ? (
-          <div className="mt-12 text-center text-parchment/80 font-inter py-16">
-            <p className="text-lg italic font-playfair mb-8">
-              The official schedule will be presented here once the Court Registry locks the assignments.
+    <div className="space-y-8 animate-in fade-in duration-1000 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-cinzel text-gold-accent text-red-500 flex items-center gap-4">
+              <Gavel size={32} />
+              Classified Court Pairings
+            </h1>
+            <p className="text-red-400/80 font-inter mt-2 text-sm max-w-2xl">
+              WARNING: This is the only place where full pairings are visible. DO NOT project this screen or share this information with participants. Doing so compromises the Moot Court integrity.
             </p>
-            <div className="border border-gold-muted/30 p-8 rounded-sm bg-court-charcoal/50 max-w-md mx-auto">
-              <p className="tracking-widest uppercase text-sm text-gold-muted mb-2">Status</p>
-              <p className="font-cinzel text-xl text-ivory animate-pulse">PENDING ALLOCATION</p>
+            <div className="w-16 h-px bg-red-900 mt-4" />
+          </div>
+          <DownloadScheduleButton schedule={schedule} />
+        </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {schedule.map((match: any) => (
+          <div key={match.matchId} className="bg-court-charcoal/80 border border-gold-muted/30 relative overflow-hidden group hover:border-gold-accent transition-colors">
+            
+            {/* Header */}
+            <div className="bg-court-navy p-4 border-b border-gold-muted/30 flex justify-between items-center">
+               <span className="font-cinzel text-gold-accent tracking-widest text-lg font-bold">
+                 COURT {String(match.courtNumber).padStart(2, '0')}
+               </span>
+               <span className="text-xs uppercase tracking-widest text-parchment/50 font-inter">
+                 Case {String(match.caseNumber).padStart(2, '0')}
+               </span>
+            </div>
+
+            {/* Case Title */}
+            <div className="p-4 bg-black/20 border-b border-gold-muted/10">
+              <p className="font-playfair italic text-parchment/80 text-sm line-clamp-1" title={match.caseTitle}>
+                {match.caseTitle}
+              </p>
+            </div>
+
+            {/* Plaintiff vs Defendant */}
+            <div className="p-6 space-y-6">
+              
+              <div className="space-y-2">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-blue-400 font-bold flex items-center gap-2">
+                  <Shield size={12} /> Plaintiff
+                </span>
+                <p className="font-inter text-sm text-ivory min-h-[40px]">
+                  {match.plaintiff || <span className="text-red-500/50 italic">Unassigned</span>}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-center">
+                <div className="h-px bg-gold-muted/20 flex-1" />
+                <span className="px-4 font-cinzel text-gold-muted/50 text-xs tracking-widest italic">VS</span>
+                <div className="h-px bg-gold-muted/20 flex-1" />
+              </div>
+
+              <div className="space-y-2">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-red-400 font-bold flex items-center gap-2">
+                  <Shield size={12} /> Defendant
+                </span>
+                <p className="font-inter text-sm text-ivory min-h-[40px]">
+                  {match.defendant || <span className="text-red-500/50 italic">Unassigned</span>}
+                </p>
+              </div>
+
             </div>
           </div>
-        ) : (
-          <div className="mt-12 md:mt-16 space-y-8 md:space-y-12">
-            {data.courts.map((court, index) => (
-              <div key={index} className="bg-court-charcoal/60 border border-gold-muted/30 p-5 md:p-8 relative overflow-hidden">
-                {/* Decorative corner */}
-                <div className="absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 bg-gold-accent/10 border-l border-b border-gold-muted/30" />
-                
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 border-b border-gold-muted/20 pb-4">
-                  <div>
-                    <h2 className="text-xl md:text-2xl font-cinzel text-gold-accent flex items-center gap-3">
-                      Court Room {court.courtNumber}
-                    </h2>
-                    <p className="text-parchment/60 font-inter mt-1 text-sm md:text-base">Time: {court.time}</p>
-                  </div>
-                  <div className="mt-4 md:mt-0 text-left md:text-right pr-12 md:pr-0">
-                    <p className="text-[10px] md:text-xs uppercase tracking-widest text-gold-muted">Case No. {court.caseData?.case_number}</p>
-                    <p className="font-playfair text-ivory italic max-w-[200px] md:max-w-xs text-sm md:text-base">{court.caseData?.title}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 relative">
-                  {/* VS Badge */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-court-dark border border-gold-muted flex items-center justify-center font-cinzel text-gold-accent z-10 text-xs md:text-base">
-                    VS
-                  </div>
-
-                  {/* Plaintiff */}
-                  <div className="bg-court-dark/50 p-4 md:p-6 border-l-2 border-blue-900/50 pb-8 md:pb-6">
-                    <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">Plaintiff Counsel</p>
-                    {court.plaintiff ? (
-                      <>
-                        <h3 className="text-lg md:text-xl font-cinzel text-ivory">{court.plaintiff.college_name}</h3>
-                        <p className="font-mono text-xs md:text-sm text-parchment/50 mt-1">CODE: {court.plaintiff.team_code}</p>
-                      </>
-                    ) : (
-                      <p className="text-parchment/40 italic text-sm">TBD</p>
-                    )}
-                  </div>
-
-                  {/* Defendant */}
-                  <div className="bg-court-dark/50 p-4 md:p-6 border-l-2 md:border-l-0 md:border-r-2 border-red-900/50 md:text-right pt-8 md:pt-6">
-                    <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-red-400 mb-2">Defense Counsel</p>
-                    {court.defendant ? (
-                      <>
-                        <h3 className="text-lg md:text-xl font-cinzel text-ivory">{court.defendant.college_name}</h3>
-                        <p className="font-mono text-xs md:text-sm text-parchment/50 mt-1">CODE: {court.defendant.team_code}</p>
-                      </>
-                    ) : (
-                      <p className="text-parchment/40 italic text-sm">TBD</p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            {data.courts.length === 0 && (
-              <p className="text-center text-parchment/50 italic">No allocations found.</p>
-            )}
-          </div>
-        )}
+        ))}
       </div>
-    </main>
+
+      {schedule.length === 0 && (
+        <div className="p-12 text-center text-parchment/50 font-inter text-sm border border-gold-muted/30 bg-court-charcoal/50">
+          <Gavel size={32} className="mx-auto mb-4 text-gold-muted/30" />
+          The draw has not been conducted yet. Pairings are unavailable.
+        </div>
+      )}
+    </div>
   );
 }
