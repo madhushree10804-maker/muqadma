@@ -19,8 +19,26 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "MUQADMA 2026",
-  description: "Moot Court Competition - St. Agnes College",
+  title: "MUQADMA 2026 - AIKYAM",
+  description: "The Official Moot Court Competition by St. Agnes College (Autonomous), Mangaluru.",
+  icons: {
+    icon: "/aikyam.png",
+    apple: "/aikyam.png",
+  },
+  openGraph: {
+    title: "MUQADMA 2026 - AIKYAM",
+    description: "The Official Moot Court Competition by St. Agnes College (Autonomous), Mangaluru.",
+    url: "https://muqadma.vercel.app",
+    images: [
+      {
+        url: "/aikyam.png",
+        width: 800,
+        height: 600,
+        alt: "MUQADMA AIKYAM Logo",
+      },
+    ],
+    type: "website",
+  },
 };
 
 export default function RootLayout({
