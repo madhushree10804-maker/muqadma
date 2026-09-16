@@ -1,6 +1,7 @@
 import { getAdminAuditLogs } from "@/app/actions/admin-audit";
 import { History } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
 export default async function AuditRegistry() {
   const logs = await getAdminAuditLogs();
 

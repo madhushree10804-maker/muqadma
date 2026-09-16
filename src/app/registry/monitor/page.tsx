@@ -1,6 +1,7 @@
 import { getAdminRevealLogs } from "@/app/actions/admin-monitor";
 import { Eye, Clock } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
 export default async function MonitorRegistry() {
   const logs = await getAdminRevealLogs();
 
