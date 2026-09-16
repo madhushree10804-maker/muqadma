@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import CountdownTimer from "./CountdownTimer";
 
 export default function Hero() {
   return (
@@ -51,9 +52,13 @@ export default function Hero() {
           
           <div className="w-16 md:w-24 h-px bg-gold-accent/50 mx-auto my-6 md:my-8" />
           
-          <p className="text-base md:text-xl text-gold-accent font-cinzel tracking-widest mt-6 md:mt-8">
+          <p className="text-base md:text-xl text-gold-accent font-cinzel tracking-widest mt-6 md:mt-8 mb-8">
             THE CASE IS BEFORE THE COURT.
           </p>
+
+          <div className="flex justify-center mt-8">
+            <CountdownTimer targetDate="2026-09-16T22:30:00+05:30" />
+          </div>
         </motion.div>
 
         <motion.div
