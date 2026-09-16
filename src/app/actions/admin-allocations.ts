@@ -90,9 +90,10 @@ export async function autoAllocateTeams() {
   // 7. Lock the allocations so the public schedule page displays them
   await supabase.from("event_settings").update({ allocations_locked: true }).eq("id", 1);
 
+  const uniqueCourts = new Set(newAllocations.map(a => a.court_number)).size;
+
   return { 
     success: true, 
-
-    message: `Successfully allocated ${shuffledTeams.length} teams across ${courtNumber - 1} courts.` 
+    message: `Successfully allocated ${shuffledTeams.length} teams across ${uniqueCourts} courts.` 
   };
 }
