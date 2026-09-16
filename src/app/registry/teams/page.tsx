@@ -43,7 +43,7 @@ export default function TeamsRegistry() {
     const res = await generateAllAccessCodes();
     
     if (res.success) {
-      setGeneratedCodes(res.codes);
+      setGeneratedCodes(res.codes || null);
       fetchTeams();
     } else {
       alert(`Error generating codes: ${res.message}`);

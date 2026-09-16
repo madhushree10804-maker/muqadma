@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Trophy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getVerdict } from "@/app/actions/verdict";
 
