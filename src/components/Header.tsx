@@ -12,7 +12,6 @@ export default function Header() {
     { name: "The Court", href: "/the-court" },
     { name: "The Case", href: "/the-case" },
     { name: "Rules", href: "/rules" },
-    { name: "Schedule", href: "/schedule" },
     { name: "Know Your Case", href: "/know-your-case" },
     { name: "Results", href: "/results" },
   ];
