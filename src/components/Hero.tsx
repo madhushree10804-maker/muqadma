@@ -57,7 +57,7 @@ export default function Hero() {
           </p>
 
           <div className="flex justify-center mt-8">
-            <CountdownTimer targetDate="2026-09-16T22:30:00+05:30" />
+            <CountdownTimer targetDate="2026-09-17T10:30:00+05:30" />
           </div>
         </motion.div>
 
