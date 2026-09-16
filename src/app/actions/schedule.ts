@@ -20,8 +20,8 @@ export async function getPublicSchedule() {
       side,
       court_number,
       allotted_time,
-      teams!team_id ( college_name, team_code ),
-      cases!case_id ( case_number, title )
+      teams ( college_name, team_code ),
+      cases ( case_number, title )
     `)
     .order("court_number", { ascending: true });
 
