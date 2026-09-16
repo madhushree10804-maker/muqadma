@@ -1,5 +1,7 @@
 import { getDashboardStats } from "@/app/actions/admin";
 
+export const dynamic = 'force-dynamic';
+
 export default async function RegistryDashboard() {
   const stats = await getDashboardStats();
 
